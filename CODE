@@ -1,0 +1,156 @@
+PROGRAM:
+#include <LiquidCrystal.h>
+LiquidCrystal led(12, 11,7, 5, 4, 3, 6);
+float distance;
+
+volatile int count = 0;  // volatile is a keyword known as a variable qualifier.
+
+int leftinput1=A2; // Input from the Sensor send to various pin of Arduino from AO — A3.
+int leftinput2=A3;
+
+int rightInput1=A0;
+
+int rightInput2=Al;
+
+int leftMotor= 9; // Arduino output PWM to motor for speed control.
+
+int rightMotor= 10;
+
+int leftValuel = 0; // The digital value assigned to the digital read from analog pin from
+the Arduino.
+
+int rightValuel = 0;
+
+int leftValue2 = 0;
+
+int rightValue2 = 0;
+
+unsigned long lastmillis = 0; // Asigned lastmillis variable to store the current time
+value.
+
+void setup()
+
+// put your setup code here, to run once:
+{
+Serial.begin(9600);
+led.begin(2, 20); // setup instruction for LCD 2x20.
+Icd.setCursor(0,0); //Intialise the position of the cursor for print.
+
+lcd.print("distance (cm)"); // The title print in the LCD displays
+
+pinMode (leftMotor, OUTPUT); // output is the vale assign to left motor
+
+pinMode (rightMotor, OUTPUT); // output is the value assign to Right motor
+
+attachInterrupt(0, techno, RISING)://interrupt zero (0) is on pin two(2) activate on
+rising i.e low to high.
+}
+void loop()
+
+// put your main code here, to run repeatedly:
+{
+leftValuel = digitalRead (leftInputl); // digital data from the input sensor is taken
+rightValuel= digitalRead (rightInput1); // there are all together four sensors two at the
+left most and two at the rightmost
+leftValue2 = digitalRead (leftInput2);
+rightValue2= digitalRead (rightInput2);
+if(millis() - lastmillis >= 6000) //Uptade every Six seconds
+{
+detachInterrupt(0)
+distance = distance + 2*3.1416*3*count;
+led.setCursor(0,1);
+led.print(distance);
+count = 0; // Restart the RPM counter
+lastmillis = millis(); / Update lastmillis to maintain count difference 6 seconds.
+
+attachInterrupt(0, techno, RISING);
+}if
+(leftValuel == HIGH && leftValue2 == HIGH && rightValuel== HIGH &&
+rightValue2 == HIGH)
+{
+digitalWrite(leftMotor, LOW); //When all the sensors are out of track it stop for two
+sends and begin search for
+path for 1sec and again repeat
+digital Write(rightMotor, LOW);
+delay(2000);
+
+digitalWrite(leftMotor, LOW);
+digital Write(rightMotor, HIGH);
+delay(1000);
+
+}
+else
+if
+(leftValuel == HIGH && leftValue2 == LOW && rightValuel== LOW &&
+rightValue2== LOW)
+{
+analogWrite (leftMotor, 191); //The left motor moves with slightly slow speed while
+right motor moves with slower speed
+analogWrite (rightMotor, 185); //The robot moves turns toward the right
+//delay(1000);
+}
+else
+if (leftValuel == HIGH && leftValue2 == HIGH && rightValuel== LOW &&
+rightValue2== LOW)
+it
+analogWrite (leftMotor,191 ); //The left motor moves with slightly slow speed while
+
+right motor moves with slower speed
+
+analogWrite (rightMotor, 64); //The robot moves turns toward the right
+// delay(1000);
+}
+
+else
+if (leftValuel == HIGH && leftValue2 == HIGH && rightValuel== HIGH &&
+rightValue2== LOW)
+analogWrite (leftMotor,255 ); //The left motor moves with slightly slow speed while
+right motor moves with slower speed
+analogWrite (rightMotor,64); //The robot moves turns toward the right
+//delay(1000);
+}
+Else
+if (leftValuel == LOW && leftValue2 == LOW && rightValuel== LOW &&
+{
+
+rightValue2== HIGH)
+{
+
+analogWrite (leftMotor, 127); //The left motor moves with slightly slow speed
+
+while right motor moves with slower speed
+analogWrite (rightMotor,191);
+// delay(1000);
+}
+else
+if( leftValuel == LOW && leftValue2 == LOW && rightValuel== HIGH &&
+rightValue2== HIGH)
+{
+analogWrite (leftMotor, 64); //The left motor moves with slightly slow speed
+
+while right motor moves with slower speed
+analogWrite (rightMotor, 191);
+// delay(1000);
+}
+else
+if( leftValuel == LOW && leftValue2 == HIGH && rightValuel== HIGH &&
+rightValue2== HIGH)
+{
+analogWrite (leftMotor,64); //The left motor moves with slightly slow speed
+while right motor moves with slower speed
+analogWrite (rightMotor,255);
+// delay(1000);
+}
+else if ( leftValuel == LOW && leftValue2 == LOW && rightValuel== LOW &&
+rightValue2== LOW)
+{
+analogWrite (rightMotor,255); // The robot moves with full speed when all of the sensor is low
+analogwrite(leftmotor,255);
+}}
+void techno()
+{
+count ++;
+}
+
+
+
